@@ -8,9 +8,9 @@ app = Flask(__name__)
 def get_ticker_data(ticker):
     ticker = yf.Ticker('VTI')
     hist = ticker.history(period='max') 
-    hist_json = hist.to_json()
-    print(hist_json)
-    return jsonify(hist_json)
+    # hist_json = hist.to_json()
+    # print(hist_json)
+    return jsonify(hist)
 
 #idiot testing
 @app.route('/')
