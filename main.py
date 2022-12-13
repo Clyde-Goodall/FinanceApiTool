@@ -1,6 +1,5 @@
 import yfinance as yf
-import pandas as pd
-from flask import Flask
+from flask import Flask, jsonify
 
 app = Flask(__name__)
 
@@ -11,7 +10,7 @@ def get_ticker_data(ticker):
     hist = ticker.history(period='max') 
     hist_json = hist.to_json()
     print(hist_json)
-    return hist_json
+    return jsonify(hist_json)
 
 #idiot testing
 @app.route('/')
