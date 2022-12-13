@@ -7,8 +7,9 @@ app = Flask(__name__)
 # returns all price data for ticker param
 @app.route('/get/<ticker>')
 def get_ticker_data(ticker):
-    ticker = yf.Ticker('VTI')
+    ticker = yf.Ticker(ticker)
     hist = ticker.history(period='max') 
+    hist['Dates Corrected'] = hist.index
     # initially to dict
     hist_dict = hist.to_dict(orient='records')
     # then to json
