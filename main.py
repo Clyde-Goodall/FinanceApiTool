@@ -10,7 +10,7 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 
 # returns all price data for ticker param
 @app.route('/get/<ticker>')
-@cross_origin()
+@cross_origin(origin='*')
 def get_ticker_data(ticker):
     ticker = yf.Ticker(ticker)
     hist = ticker.history(period='max') 
@@ -23,7 +23,7 @@ def get_ticker_data(ticker):
     return jsonify(hist_dict)
 
 @app.route('/get-one', methods=['POST'])
-@cross_origin()
+@cross_origin(origin='*')
 def getByDateAndTicker():
     body = request.json
     print(body)
