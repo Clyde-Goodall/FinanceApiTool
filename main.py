@@ -1,11 +1,16 @@
 import yfinance as yf
 import json
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
+from flask_cors import CORS, cross_origin
+import logging
 
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 # returns all price data for ticker param
 @app.route('/get/<ticker>')
+@cross_origin()
 def get_ticker_data(ticker):
     ticker = yf.Ticker(ticker)
     hist = ticker.history(period='max') 
@@ -17,12 +22,20 @@ def get_ticker_data(ticker):
     # print(hist_json)
     return jsonify(hist_dict)
 
+@app.route('/get-one', methods=['POST'])
+@cross_origin()
+def getByDateAndTicker():
+    body = request.json
+    print(body)
+    return 'hola bitch'
+
+
 #idiot testing
 @app.route('/')
 def home():
     print('hellooooooo')
 
-
 # start
 if __name__ == "__main__":
+    logging.getLogger('flask_cors').leel = logging.DEBUG
     app.run(debug=True, host="0.0.0.0")
