@@ -1,5 +1,6 @@
 import yfinance as yf
 import json
+import pandas as pd
 from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
 import logging
@@ -26,8 +27,9 @@ def get_ticker_data(ticker):
 @app.route('/get-one', methods=['POST'])
 @cross_origin(origin='*')
 def getByDateAndTicker():
+
     body = request.json
-    print(body)
+    # print(body)
     #guard
     if(body['date'] == '' or body['date'] == None or body['ticker'] == '' or body['ticker'] == None):
         return jsonify({'error': 'invalid data'})
@@ -35,12 +37,16 @@ def getByDateAndTicker():
     # I love useless comments
     wanted_date = datetime.strptime(body['date'], '%Y-%m-%d')
     one_day = wanted_date + timedelta(days=1)
+
     try:
         hist = yf.download(body['ticker'], start=wanted_date, end=one_day)
+        hist = pd.DataFrame(hist).round(2)
+        # print(hist)
         return jsonify(hist.to_dict(orient='records'))
     except Exception as e:
-        print(e)	    
-    return jsonify(hist.to_dict(orient='records'))
+        print(e)	
+    print('ruh roh')   
+    return jsonify({'error': 'Could not find symbol'})
 
 #idiot testing
 @app.route('/')
@@ -50,4 +56,4 @@ def home():
 # start
 if __name__ == "__main__":
     logging.getLogger('flask_cors').leel = logging.DEBUG
-    app.run(debug=True, host="0.0.0.0")
+    app.run(debug=True, host="0.0.0.0", port=4000)
