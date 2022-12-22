@@ -3,6 +3,7 @@ import json
 from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
 import logging
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -27,8 +28,19 @@ def get_ticker_data(ticker):
 def getByDateAndTicker():
     body = request.json
     print(body)
-    return 'hola bitch'
-
+    #guard
+    if(body['date'] == '' or body['date'] == None or body['ticker'] == '' or body['ticker'] == None):
+        return jsonify({'error': 'invalid data'})
+    # cool and fun stuff
+    # I love useless comments
+    wanted_date = datetime.strptime(body['date'], '%Y-%m-%d')
+    one_day = wanted_date + timedelta(days=1)
+    try:
+        hist = yf.download(body['ticker'], start=wanted_date, end=one_day)
+        return jsonify(hist.to_dict(orient='records'))
+    except Exception as e:
+        print(e)	    
+    return jsonify(hist.to_dict(orient='records'))
 
 #idiot testing
 @app.route('/')
