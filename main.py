@@ -29,7 +29,6 @@ def get_ticker_data(ticker):
 def getByDateAndTicker():
 
     body = request.json
-    # print(body)
     #guard
     if(body['date'] == '' or body['date'] == None or body['ticker'] == '' or body['ticker'] == None):
         return jsonify({'error': 'invalid data'})
@@ -44,8 +43,8 @@ def getByDateAndTicker():
         # print(hist)
         return jsonify(hist.to_dict(orient='records'))
     except Exception as e:
-        print(e)	
-    print('ruh roh')   
+        print(e)
+    print('ruh roh')
     return jsonify({'error': 'Could not find symbol'})
 
 #idiot testing
@@ -56,4 +55,4 @@ def home():
 # start
 if __name__ == "__main__":
     logging.getLogger('flask_cors').leel = logging.DEBUG
-    app.run(debug=True, host="0.0.0.0")
+    app.run(debug=True, host="0.0.0.0", port=4000)
